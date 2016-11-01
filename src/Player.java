@@ -15,5 +15,8 @@ public class Player {
         this.bet = bet;
     }
 
-
+    @Override
+    public String toString() {
+        return name;
+    }
 }

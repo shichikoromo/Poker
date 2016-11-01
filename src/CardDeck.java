@@ -44,6 +44,29 @@ public class CardDeck {
         draw();
     }
 
+    public List<PokerCard> flop() {
+        List<PokerCard> cards = new ArrayList<>();
+        burn();
+        cards.add(draw());
+        cards.add(draw());
+        cards.add(draw());
+        return cards;
+    }
+
+    public List<PokerCard> turn() {
+        List<PokerCard> cards = new ArrayList<>();
+        burn();
+        cards.add(draw());
+        return cards;
+    }
+
+    public List<PokerCard> river() {
+        List<PokerCard> cards = new ArrayList<>();
+        burn();
+        cards.add(draw());
+        return cards;
+    }
+
     @Override
     public String toString() {
         String string = "";
