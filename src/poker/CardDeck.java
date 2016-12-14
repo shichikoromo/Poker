@@ -1,3 +1,5 @@
+package poker;
+
 import handChecker.PokerCard;
 
 import java.util.ArrayList;
@@ -8,13 +10,14 @@ import java.util.Stack;
 public class CardDeck {
 
     private Stack<PokerCard> deck = new Stack<>();
+    private List<PokerCard> openCards = new ArrayList<>();
 
     public CardDeck() {
-        prepare();
     }
 
-    private void prepare() {
+    public void prepare() {
         deck.clear();
+        openCards.clear();
         for (PokerCard.Color color : PokerCard.Color.values()) {
             for (PokerCard.Value value : PokerCard.Value.values()) {
                 deck.push(new Card(color, value));
@@ -27,44 +30,40 @@ public class CardDeck {
         Collections.shuffle(deck);
     }
 
-    private PokerCard draw() {
-        // PokerCard card = this.deck.pop();
-        // return card;
-        return deck.pop();
-    }
-
-    public List<PokerCard> drawTwo() {
+    public List<PokerCard> draw(int amount) {
         List<PokerCard> cards = new ArrayList<>();
-        cards.add(draw());
-        cards.add(draw());
+        for (int i = 1; i <= amount; i++) {
+            cards.add(deck.pop());
+        }
         return cards;
     }
 
     public void burn() {
-        draw();
+        draw(1);
+    }
+
+    private List<PokerCard> drawOpenCards(int amount) {
+        openCards.addAll(draw(amount));
+        return openCards;
     }
 
     public List<PokerCard> flop() {
-        List<PokerCard> cards = new ArrayList<>();
         burn();
-        cards.add(draw());
-        cards.add(draw());
-        cards.add(draw());
-        return cards;
+        return drawOpenCards(3);
     }
 
     public List<PokerCard> turn() {
-        List<PokerCard> cards = new ArrayList<>();
         burn();
-        cards.add(draw());
-        return cards;
+        return drawOpenCards(1);
     }
 
     public List<PokerCard> river() {
-        List<PokerCard> cards = new ArrayList<>();
         burn();
-        cards.add(draw());
-        return cards;
+        return drawOpenCards(1);
+    }
+
+    public List<PokerCard> getOpenCards() {
+        return openCards;
     }
 
     @Override
