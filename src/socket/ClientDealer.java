@@ -1,5 +1,7 @@
 package socket;
 
+import poker.Player;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,30 +15,36 @@ public class ClientDealer extends Thread {
     private ObjectOutputStream out;
 
     public ClientDealer(Socket client, Server server) {
-        this.client = client;
         this.server = server;
+        this.client = client;
 
         try {
-            in = new ObjectInputStream(client.getInputStream());
             out = new ObjectOutputStream(client.getOutputStream());
+            in = new ObjectInputStream(client.getInputStream());
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
-
     }
 
     public void run() {
-        while (true) {
-            try {
-                Message message = (Message) in.readObject();
+        try {
+            String name = in.readObject().toString();
+            int money = Integer.parseInt(in.readObject().toString());
 
-                switch (message.getTitle()) {
-                    case "Player registered":
-                        System.out.println("Player successfully registered");
+            Player player = new Player(name, money, in, out);
+            boolean canAddPlayerToTable = server.addPlayerToTable(player);
+            if (canAddPlayerToTable) {
+                Terminal.print("Player " + name + " (¥ " + money + ") has successfully registered" + "\n");
+                out.writeObject("Welcome " + name + " !");
+                if (server._startGame) {
+                    server.startGame();
+                    server._startGame = false;
                 }
-
-            } catch (ClassNotFoundException | IOException e) {
+            } else {
+                out.writeObject("Table is already full !");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

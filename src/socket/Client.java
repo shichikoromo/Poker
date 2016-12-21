@@ -8,76 +8,57 @@ import java.util.Scanner;
 
 public class Client extends Thread {
 
-    private Socket client;
+    private Socket server;
     private ObjectInputStream in;
     private ObjectOutputStream out;
+    private Scanner scanner = new Scanner(System.in);
 
     public Client() {
 
-        Scanner scanner = new Scanner(System.in);
-
         try {
-            client = new Socket("127.0.0.1", 3333);
-            in = new ObjectInputStream(client.getInputStream());
-            out = new ObjectOutputStream(client.getOutputStream());
 
             System.out.println("Please enter your name:");
             String name = scanner.next();
-
             System.out.println("How much money do you have?:");
-            int money = scanner.nextInt();
+            Integer money = scanner.nextInt();
 
-            System.out.print("Player " + name + " has ¥ " + money);
+            Terminal.print("Player " + name + " has ¥" + money + "\n");
 
-            Player player = new Player(name, money);
-            Message message = new Message("Player registered", player);
-            writeMessage(message);
+            System.out.println("Trying to connnect...");
+            server = new Socket("localhost", 2533);
 
-        } catch (IOException e) {
+            out = new ObjectOutputStream(server.getOutputStream());
+            in = new ObjectInputStream(server.getInputStream());
 
+            out.writeObject(name);
+            out.writeObject(money);
+
+        } catch (Exception e) {
+            System.out.println("Exception " + e.getMessage());
         }
     }
 
     public static void main(String args[]) throws IOException {
-        new Client();
-    }
-
-    private void writeMessage(Message message) {
-        try {
-            out.writeObject(message);
-            out.flush();
-        } catch (IOException e) {
-        }
+        new Client().start();
     }
 
     @Override
     public void run() {
-        while (true) {
-            try {
-                Message message = (Message) in.readObject();
 
-                switch (message.getTitle()) {
-                    case "":
-                        break;
+        try {
 
+            while (true) {
+                String message = in.readObject().toString();
+
+                if (message.contains("QUESTION:")) {
+                    Terminal.printQuestion(message);
+                    out.writeObject(scanner.next());
+                } else {
+                    Terminal.print(message);
                 }
-            } catch (ClassNotFoundException | IOException e) {
-
             }
-        }
-    }
-
-    class Player {
-        public String name;
-        public int money;
-
-        public Player(String name, int money) {
-            this.name = name;
-            this.money = money;
-        }
-
-        public String getName() {
-            return name;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
     }

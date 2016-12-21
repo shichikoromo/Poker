@@ -3,6 +3,9 @@ package poker;
 import handChecker.PokerCard;
 import poker.exception.NotEnoughMoneyException;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +17,52 @@ public class Player {
     private boolean isAllIn;
     private List<PokerCard> handCards = new ArrayList<>();
 
-    public Player(String name, int money) {
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+
+    public Player(String name, int money, ObjectInputStream in, ObjectOutputStream out) {
         this.name = name;
         this.money = money;
+
+        this.in = in;
+        this.out = out;
     }
 
+    /**
+     * write message to player
+     */
+    public void say(String message) {
+        try {
+            out.writeObject(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Object ask(String question) {
+        say("QUESTION:\n" + question);
+        Object result = null;
+        try {
+            result = in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String askForString(String question) {
+        Object askStringObject = ask(question);
+        if (askStringObject != null) {
+            return askStringObject.toString();
+        } else {
+            return "";
+        }
+    }
+
+    public int askForInteger(String question) throws NumberFormatException {
+        String askIntegerString = askForString(question);
+        return Integer.parseInt(askIntegerString);
+    }
 
     public String getName() {
         return name;

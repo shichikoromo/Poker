@@ -22,8 +22,8 @@ public class PotTest {
     public void setUp() throws Exception {
         pot = new Pot();
 
-        player1 = new Player("Player 1", 1000);
-        player2 = new Player("Player 2", 1000);
+        //player1 = new Player("Player 1", 1000);
+        //player2 = new Player("Player 2", 1000);
     }
 
     @Test

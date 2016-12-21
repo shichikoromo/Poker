@@ -4,6 +4,7 @@ import handChecker.HandChecker;
 import handChecker.HandValue;
 import handChecker.PokerCard;
 import poker.exception.NotEnoughMoneyException;
+import socket.Terminal;
 
 import java.util.*;
 
@@ -17,6 +18,7 @@ public class Table {
     private List<Foo> playerScores = new ArrayList<>();
     private List<Foo> winners = new ArrayList<>();
     private List<Foo> secondWinners = new ArrayList<>();
+    private List<String> playerNames = new ArrayList<>();
 
 
     private Player dealer;
@@ -35,11 +37,13 @@ public class Table {
 
     public List<Player> addPlayer(Player player) {
         players.add(player);
+        playerNames.add(player.getName());
         return players;
     }
 
     public List<Player> removePlayer(Player player) {
         players.remove(player);
+        playerNames.remove(player.getName());
         return players;
     }
 
@@ -53,7 +57,7 @@ public class Table {
         dealer = getPlayerFromIndex(nextDealerIndex);
 
         if (actualPlayers.size() < 2) {
-            System.out.println("The Game cannot continue.");
+            writeMessageForAll("The Game cannot continue.");
         } else if (actualPlayers.size() == 2) {
             smallBlind = dealer;
             bigBlind = getPlayerFromIndex(nextDealerIndex + 1);
@@ -97,24 +101,29 @@ public class Table {
                     bigBlind.bet(minStake);
                     mainPot.add((minStake / 2));
                     mainPot.add(minStake);
-                    System.out.println("\n" + "BET PHASE - PRE-FLOP");
-                    writeMessage("Small Blind: " + smallBlind.getName() + " " + minStake / 2);
-                    writeMessage("  Big Blind: " + bigBlind.getName() + " " + minStake + "\n");
+
+                    String message = "";
+                    message += "\n" + "BET PHASE - PRE-FLOP\n";
+                    message += "Small Blind " + smallBlind.getName() + " payed ¥" + minStake / 2 + "\n";
+                    message += "  Big Blind " + bigBlind.getName() + " payed ¥" + minStake + "\n";
+                    message += "\nmax stake: " + maxStake + "\n";
+                    writeMessageForAll(message);
+
                 } catch (NotEnoughMoneyException e) {
                     System.err.println(e.getMessage());
                 }
                 break;
             case POSTFLOP:
                 newPhase = true;
-                System.out.println("\n" + "BET PHASE - POST FLOP");
+                writeMessageForAll("\n" + "BET PHASE - POST FLOP");
                 break;
             case POSTTURN:
                 newPhase = true;
-                System.out.println("\n" + "BET PHASE - POST TURN");
+                writeMessageForAll("\n" + "BET PHASE - POST TURN");
                 break;
             case SHOWDOWN:
                 newPhase = true;
-                System.out.println("\n" + "BET PHASE - SHOW DOWN");
+                writeMessageForAll("\n" + "BET PHASE - SHOW DOWN");
                 break;
         }
 
@@ -127,20 +136,23 @@ public class Table {
                 currentPlayer = getNextPlayer(currentPlayer);
             } else {
                 while (isOptionInvalid) {
-                    System.out.println(currentPlayer.getName() + " - What do you want to do?");
-                    System.out.println("\t(1) - fold");
-                    System.out.println("\t(2) - call");
-                    System.out.println("\t(3) - check");
-                    System.out.println("\t(4) - bet");
-                    System.out.println("\t(5) - raise");
-                    System.out.println("\t(6) - all in");
+                    writeMessageForAll(currentPlayer.getName() + "'s turn...");
 
-                    option = inputInt();
+                    String message = "";
+                    message += currentPlayer.getName() + " - What do you want to do?\n";
+                    message += "\t(1) - fold\n";
+                    message += "\t(2) - call\n";
+                    message += "\t(3) - check\n";
+                    message += "\t(4) - bet\n";
+                    message += "\t(5) - raise\n";
+                    message += "\t(6) - all in\n";
+
+                    option = getInput(message);
 
                     if (1 <= option && option <= 6) {
                         isOptionInvalid = false;
                     } else {
-                        System.out.println("Please choose a valid option (1 - 6).\n");
+                        writeMessage("Please choose a valid option (1 - 6).\n");
                     }
                 }
 
@@ -149,13 +161,8 @@ public class Table {
         }
     }
 
-    private int inputInt() {
-        String input = scanner.next();
-        while (!isInteger(input)) {
-            writeMessage("Please choose a valid option.");
-            input = scanner.next();
-        }
-        return Integer.parseInt(input);
+    private int getInput(String question) {
+        return currentPlayer.askForInteger(question);
     }
 
     private boolean isInteger(String s) {
@@ -211,6 +218,7 @@ public class Table {
 
     private void fold() {
         Player nextPlayer = getNextPlayer(currentPlayer);
+        writeMessageForAll(currentPlayer.getName() + " chose fold." + "\n");
         actualPlayers.remove(currentPlayer);
         currentPlayer = nextPlayer;
         checkIfRoundEnds();
@@ -222,14 +230,17 @@ public class Table {
             writeMessage("Action invalid. You have to bet:");
             bet();
         } else {
+            //TODO es funktioniert nicht richtig
             stake = maxStake - currentPlayer.getActualStake();
             currentPlayer.setActualStake(stake);
             betForCurrentPlayer(stake);
+            writeMessageForAll(currentPlayer.getName() + " chose call. He/she payed ¥" + stake + "\n");
         }
     }
 
     public boolean check() {
         // do nothing
+        writeMessageForAll(currentPlayer.getName() + " chose check." + "\n");
         return true;
     }
 
@@ -238,29 +249,32 @@ public class Table {
         int tries = 3;
         int stake = 0;
         while (!isBetSuccessful && tries > 0) {
-            System.out.println(currentPlayer.getName() + " - How much do you want to bet? (" + tries + " tries left)");
-            stake = scanner.nextInt();
+            String message = currentPlayer.getName() + " - How much do you want to bet? (" + tries + " tries left)";
+            stake = getInput(message);
+
             isBetSuccessful = betForCurrentPlayer(stake);
             tries--;
         }
 
         if (isBetSuccessful) {
             maxStake = stake;
+            writeMessageForAll(currentPlayer.getName() + " chose bet/raise. Actual max stake: " + maxStake + "\n");
+
         }
         return isBetSuccessful;
     }
 
     private boolean betForCurrentPlayer(int stake) {
         boolean isBetSuccessful = true;
-        if (currentPlayer.getActualStake() < maxStake) {
-            System.out.println("Your stake has to be at least " + maxStake);
+        if (stake < maxStake) {
+            writeMessage("Your stake has to be at least " + maxStake);
             isBetSuccessful = false;
         } else {
             try {
                 currentPlayer.bet(stake);
                 mainPot.add(stake);
             } catch (NotEnoughMoneyException e) {
-                System.out.println("You don't have enough money. ");
+                writeMessage("You don't have enough money. ");
                 isBetSuccessful = false;
             }
         }
@@ -268,6 +282,7 @@ public class Table {
     }
 
     private void allIn() {
+        writeMessageForAll(currentPlayer.getName() + "chose all in." + "\n");
         currentPlayer.allIn();
         allInPlayers.add(currentPlayer);
         mainPot.add(currentPlayer.getAllInMoney());
@@ -277,26 +292,33 @@ public class Table {
     private void cardPhase() {
         switch (cardPhase) {
             case PREFLOP:
-                System.out.println("\n" + "CARD PHASE - PRE-FLOP");
+                writeMessageForAll("\n" + "CARD PHASE - PRE-FLOP");
+                int i = 0;
                 for (Player player : actualPlayers) {
                     player.getHandCards().clear();
                     player.addCards(cardDeck.draw(2));
-                    writeMessage(player.getName() + " " + player.getHandCards());
+                    handCardsMessage(i);
+                    i++;
                 }
                 break;
             case FLOP:
-                System.out.println("\n" + "CARD PHASE - FLOP");
-                System.out.println(cardDeck.flop() + "\n");
+                writeMessageForAll("\n" + "CARD PHASE - FLOP");
+                writeMessageForAll(cardDeck.flop() + "\n");
                 break;
             case TURN:
-                System.out.println("\n" + "CARD PHASE - TURN");
-                System.out.println(cardDeck.turn() + "\n");
+                writeMessageForAll("\n" + "CARD PHASE - TURN");
+                writeMessageForAll(cardDeck.turn() + "\n");
                 break;
             case RIVER:
-                System.out.println("\n" + "CARD PHASE - RIVER");
-                System.out.println(cardDeck.river() + "\n");
+                writeMessageForAll("\n" + "CARD PHASE - RIVER");
+                writeMessageForAll(cardDeck.river() + "\n");
                 break;
         }
+    }
+
+    private void handCardsMessage(int i) {
+        currentPlayer = players.get(i);
+        writeMessage("Player " + currentPlayer.getName() + "'s Handcards: " + currentPlayer.getHandCards());
     }
 
     private int getSumOfMainPot() {
@@ -311,7 +333,7 @@ public class Table {
     }
 
     private int getSumOfSidePot() {
-        int sum = 0;
+        int sum;
         int number = 0;
 
         for (Player player : allInPlayers) {
@@ -400,7 +422,7 @@ public class Table {
             } else {
                 // error
             }
-            writeMessage("\n" + winners + " is/are winner/s and got ¥" + pot + ". " + "\n");
+            writeMessageForAll("\n" + winners + " is/are winner/s and got ¥" + pot + ". " + "\n");
 
         } else if (allInPlayers.size() == 1) {
             pot = getSumOfSidePot();
@@ -409,7 +431,7 @@ public class Table {
         } else {
             findSecondWinner();
             winners.get(0).getPlayer().addMoney(getSumOfMainPot());
-            writeMessage("\n" + winners.get(0).getPlayer() + " is winner. He/She got ¥" + pot + ". " + "\n");
+            writeMessageForAll("\n" + winners.get(0).getPlayer() + " is winner. He/She got ¥" + pot + ". " + "\n");
             if (secondWinners.size() == 1) {
                 pot = getSumOfSidePot();
                 secondWinners.get(0).getPlayer().addMoney(pot);
@@ -419,7 +441,7 @@ public class Table {
                     secondWinner.getPlayer().addMoney(pot);
                 }
             }
-            writeMessage(secondWinners + "is/are secondwinner/s and got ¥" + pot + ".");
+            writeMessageForAll(secondWinners + "is/are secondwinner/s and got ¥" + pot + ".");
         }
 
 
@@ -427,12 +449,12 @@ public class Table {
             Player player = players.get(i);
             if (player.getMoney() < minStake) {
                 removePlayer(player);
-                writeMessage(player.getName() + " has not enough money to continue.");
+                writeMessageForAll(player.getName() + " has not enough money to continue.");
             }
         }
 
         if (!checkIfGameEnds()) {
-            writeMessage(round + ". round ended. Next round beginns." + "\n");
+            writeMessageForAll(round + ". round ended. Next round beginns." + "\n");
             startNextRound();
         } else {
             endGame();
@@ -449,19 +471,28 @@ public class Table {
     }
 
     private void endGame() {
-        writeMessage("The Game is end. " + winners + " is/are winner/s.");
+        writeMessageForAll("The Game is end. " + winners + " is/are winner/s.");
     }
+
+    public void startRoundMessage() {
+        String message = "";
+
+        message += "\n" + round + ". ROUND" + "\n";
+        message += "Players: " + playerNames + "\n";
+
+        message += "\n" + "     Dealer: " + dealer.getName() + "\n";
+        message += "Small-Blind: " + smallBlind.getName() + "\n";
+        message += "  Big-Blind: " + bigBlind.getName() + "\n";
+
+        writeMessageForAll(message);
+    }
+
 
     public void startNextRound() {
         round++;
         cardDeck.prepare();
         winners.clear();
         secondWinners.clear();
-
-        System.out.println("\n" + round + ". ROUND" + "\n");
-
-        System.out.println("Players: " + players + "\n");
-
 
         betPhase = BetPhase.PREFLOP;
         cardPhase = CardPhase.PREFLOP;
@@ -471,9 +502,8 @@ public class Table {
 
         findNextDealer();
 
-        System.out.println("     Dealer: " + dealer);
-        System.out.println("Small-Blind: " + smallBlind);
-        System.out.println("  Big-Blind: " + bigBlind + "\n");
+        startRoundMessage();
+        Terminal.print("Players: " + players + "\n");
 
         currentPlayer = getFirstPlayer();
 
@@ -501,8 +531,17 @@ public class Table {
         endRound();
     }
 
+
     private void writeMessage(String message) {
-        System.out.println(message);
+        Terminal.print(message);
+        currentPlayer.say(message);
+    }
+
+    public void writeMessageForAll(String message) {
+        Terminal.print(message);
+        for (Player player : players) {
+            player.say(message);
+        }
     }
 
     @Override
