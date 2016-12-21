@@ -20,7 +20,6 @@ public class Table {
     private List<Foo> secondWinners = new ArrayList<>();
     private List<String> playerNames = new ArrayList<>();
 
-
     private Player dealer;
     private Player smallBlind;
     private Player bigBlind;
@@ -28,7 +27,6 @@ public class Table {
     private int minStake = 10;
     private int maxStake;
     private Random random = new Random();
-    private Scanner scanner = new Scanner(System.in);
 
     private int round = 0;
     private boolean newPhase = true;
@@ -232,15 +230,17 @@ public class Table {
         } else {
             //TODO es funktioniert nicht richtig
             stake = maxStake - currentPlayer.getActualStake();
-            currentPlayer.setActualStake(stake);
-            betForCurrentPlayer(stake);
-            writeMessageForAll(currentPlayer.getName() + " chose call. He/she payed ¥" + stake + "\n");
+            if (stake > 0) {
+                betForCurrentPlayer(stake + currentPlayer.getActualStake());
+                currentPlayer.setActualStake(stake);
+            }
+            writeMessageForAll(currentPlayer.getName() + " chose call.\n");
         }
     }
 
     public boolean check() {
         // do nothing
-        writeMessageForAll(currentPlayer.getName() + " chose check." + "\n");
+        writeMessageForAll(currentPlayer.getName() + " chose check.\n");
         return true;
     }
 
@@ -427,11 +427,11 @@ public class Table {
         } else if (allInPlayers.size() == 1) {
             pot = getSumOfSidePot();
             winners.get(0).getPlayer().addMoney(pot);
-            writeMessage("\n" + winners.get(0).getPlayer() + " is winner. He/She got ¥" + pot + ". " + "\n");
+            writeMessage("\n" + winners.get(0).getPlayer().getName() + " is winner. He/She got ¥" + pot + ". " + "\n");
         } else {
             findSecondWinner();
             winners.get(0).getPlayer().addMoney(getSumOfMainPot());
-            writeMessageForAll("\n" + winners.get(0).getPlayer() + " is winner. He/She got ¥" + pot + ". " + "\n");
+            writeMessageForAll("\n" + winners.get(0).getPlayer().getName() + " is winner. He/She got ¥" + pot + ". " + "\n");
             if (secondWinners.size() == 1) {
                 pot = getSumOfSidePot();
                 secondWinners.get(0).getPlayer().addMoney(pot);
