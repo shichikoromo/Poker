@@ -1,6 +1,10 @@
 package poker;
 
-public class Card implements handChecker.PokerCard {
+import handChecker.PokerCard;
+
+import java.io.Serializable;
+
+public class Card implements handChecker.PokerCard, Serializable {
 
     private Color color;
     private Value value;
@@ -24,4 +28,5 @@ public class Card implements handChecker.PokerCard {
     public String toString() {
         return color + " " + value;
     }
+
 }

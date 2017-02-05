@@ -3,7 +3,7 @@ package poker;
 public class Poker {
     public static void main(String[] args) {
 
-        Table table = new Table();
+       // Table table = new Table();
 
 //        Player player1 = new Player("A", 200);
 //        Player player2 = new Player("B", 200);
@@ -16,7 +16,7 @@ public class Poker {
         //table.addPlayer(player4);
 
 
-        table.startNextRound();
+//        table.startNextRound();
 
 
         System.out.println("\n");
