@@ -37,5 +37,5 @@ public class GameState implements Serializable {
 
     public List<PokerCard> openCards = new ArrayList<>();
 
-
+    public boolean readyToSend;
 }

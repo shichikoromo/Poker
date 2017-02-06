@@ -107,13 +107,15 @@ public class PokerFrame extends Thread {
         initListeners();
     }
 
-    private void initListeners() {
+    private void initListeners() { //TODO SENTAKU HA ITIDO NOMI & ACTION MINA NI HYOUJI(CLIENT KARA?)
         foldButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (player.getUsername().equals(gameState.currentPlayer.getUsername())) {
                     gameState.tryAction = 0;
-                    setActionLabel(gameState.currentPlayer, gameState.tryAction);
+                    for (Player pl : gameState.players) {
+                        setActionLabel(player, gameState.tryAction);
+                    }
                 }
             }
         });
@@ -123,7 +125,9 @@ public class PokerFrame extends Thread {
             public void actionPerformed(ActionEvent e) {
                 if (player.getUsername().equals(gameState.currentPlayer.getUsername())) {
                     gameState.tryAction = 1;
-                    setActionLabel(gameState.currentPlayer, gameState.tryAction);
+                    for (Player pl : gameState.players) {
+                        setActionLabel(player, gameState.tryAction);
+                    }
                 }
             }
         });
@@ -133,8 +137,12 @@ public class PokerFrame extends Thread {
             public void actionPerformed(ActionEvent e) {
                 if (player.getUsername().equals(gameState.currentPlayer.getUsername())) {
                     gameState.tryAction = 2;
-                    setActionLabel(gameState.currentPlayer, gameState.tryAction);
+                    for (Player pl : gameState.players) {
+                        setActionLabel(player, gameState.tryAction);
+                    }
                     howMuchField.setText("  How much?  ");
+                    int i = 3;
+                    alert.setText("tries remain: " + i);
                 }
             }
         });
@@ -142,9 +150,12 @@ public class PokerFrame extends Thread {
         allInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (player.getUsername().equals(gameState.currentPlayer.getUsername())){
+                if (player.getUsername().equals(gameState.currentPlayer.getUsername())) {
                     gameState.tryAction = 3;
-                    setActionLabel(gameState.currentPlayer, gameState.tryAction);
+                    setActionLabel(player, gameState.tryAction);
+                    setDealerOrAllInIcon(player, true);
+
+
                 }
             }
         });
@@ -168,6 +179,7 @@ public class PokerFrame extends Thread {
                         gameState.tryStake = stake;
                     }
                 }
+                howMuchField.setText("               ");
             }
         });
 
@@ -219,7 +231,7 @@ public class PokerFrame extends Thread {
         allInLabel04.setVisible(false);
         allInLabel03.setVisible(false);
 
-        howMuchField.setText("              ");
+        howMuchField.setText("                ");
     }
 
     public void setRoundLabel(int round) {
@@ -282,8 +294,8 @@ public class PokerFrame extends Thread {
         }
     }
 
-    public void setDealerOrAllInIcon(Player dealer, boolean allIn) {
-        int index = getPlayerIndex(dealer);
+    public void setDealerOrAllInIcon(Player player, boolean allIn) {
+        int index = getPlayerIndex(player);
         if (allIn) {
             index += 4;
         }

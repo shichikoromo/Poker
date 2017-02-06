@@ -48,6 +48,7 @@ public class Table extends Thread {
     }
 
     private void findNextDealer() {
+        Terminal.print("findNextDealer()");
         int nextDealerIndex;
         if (gameState.dealer == null) {
             nextDealerIndex = random.nextInt(actualPlayers.size());
@@ -57,18 +58,23 @@ public class Table extends Thread {
         gameState.dealer = getPlayerFromIndex(nextDealerIndex);
 
         if (actualPlayers.size() < 2) {
+            Terminal.print("actualPlayers.size() < 2");
             // writeMessageForAll("The Game cannot continue.");
         } else if (actualPlayers.size() == 2) {
+            Terminal.print("actualPlayers.size() == 2");
             smallBlind = gameState.dealer;
             bigBlind = getPlayerFromIndex(nextDealerIndex + 1);
         } else {
+            Terminal.print("actualPlayers.size() > 2");
             smallBlind = getPlayerFromIndex(nextDealerIndex + 1);
             bigBlind = getPlayerFromIndex(nextDealerIndex + 2);
         }
     }
 
     private Player getPlayerFromIndex(int i) {
+        Terminal.print("actualplayers.size: " + actualPlayers.size());
         i = i % actualPlayers.size();
+        Terminal.print("next player: " + actualPlayers.get(i));
         return actualPlayers.get(i);
     }
 
@@ -101,13 +107,11 @@ public class Table extends Thread {
                     bigBlind.bet(minStake);
                     gameState.mainPot.add((minStake / 2));
                     gameState.mainPot.add(minStake);
-
-                    messenger.synchro(getGameState());
-
+                    Terminal.print("PREFLOP:" + "maxstake " + gameState.maxStake + " SB bet" + smallBlind.getActualStake() + " BB bet " + bigBlind.getActualStake() + " mainpot " + gameState.mainPot);
                 } catch (NotEnoughMoneyException e) {
                     System.err.println(e.getMessage());
                 }
-
+                messenger.synchro(getGameState());
                 break;
             case POSTFLOP:
                 newPhase = true;
@@ -123,24 +127,35 @@ public class Table extends Thread {
                 break;
         }
 
-
         while (!checkIfPhaseEnds()) {
             gameState.isOptionInvalid = true;
             int option = 0;
             if (gameState.currentPlayer.isAllIn()) {
                 gameState.currentPlayer = getNextPlayer(gameState.currentPlayer);
-                messenger.synchro(gameState);
+                option = 1;
             } else {
                 while (gameState.isOptionInvalid) {
                     if (gameState.tryAction >= 0) {
-                        action(getAction(gameState.tryAction));
-                    }else {
+                        option = gameState.tryAction;
+                    } else {
                         gameState.isOptionInvalid = false;
                     }
                 }
             }
+
             action(getAction(option));
+            messenger.synchro(gameState);
         }
+//
+//        while (true) {
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+//        gameState.isPhaseEnd = true;
     }
 
 
@@ -232,7 +247,7 @@ public class Table extends Thread {
         int stake;
         if (gameState.currentPlayer.getActualStake() == gameState.maxStake) {
             // writeMessage("Action invalid. You have to firstBet:");
-            bet();
+            check();
         } else {
             stake = gameState.maxStake - gameState.currentPlayer.getActualStake();
             if (stake > 0) {
@@ -312,9 +327,7 @@ public class Table extends Thread {
                     handCards = cardDeck.draw(2);
                     player.addCards(handCards);
                     gameState.handCards.add((ArrayList) handCards);
-                    //writeMessage("Player " + player.getName() + "'s Handcards: " + player.getHandCards(), player);
                 }
-                messenger.synchro(gameState);
                 break;
             case FLOP:
                 Terminal.print("\n" + "CARD PHASE - FLOP");
@@ -525,6 +538,7 @@ public class Table extends Thread {
         cardDeck.prepare();
         gameState.winners.clear();
         gameState.secondWinners.clear();
+        gameState.maxStake = 0;
 
         betPhase = BetPhase.PREFLOP;
         gameState.cardPhase = CardPhase.PREFLOP;
@@ -607,9 +621,7 @@ public class Table extends Thread {
     enum Action {
         FOLD,
         CALL,
-        CHECK,
         BET,
-        RAISE,
         ALL_IN
     }
 

@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gui.PokerFrame">
   <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="162" y="60" width="524" height="638"/>
+      <xy x="162" y="60" width="591" height="638"/>
     </constraints>
     <properties>
       <background color="-16031474"/>
@@ -42,7 +42,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <grid id="18031" layout-manager="FlowLayout" hgap="5" vgap="-1" flow-align="0">
+                  <grid id="18031" layout-manager="FlowLayout" hgap="2" vgap="-1" flow-align="0">
                     <constraints>
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -79,12 +79,14 @@
                       <component id="cdb5a" class="javax.swing.JLabel" binding="dealerLabel01">
                         <constraints/>
                         <properties>
+                          <horizontalTextPosition value="2"/>
                           <text value=""/>
                         </properties>
                       </component>
                       <component id="cf647" class="javax.swing.JLabel" binding="allInLabel01">
                         <constraints/>
                         <properties>
+                          <horizontalTextPosition value="2"/>
                           <text value=""/>
                         </properties>
                       </component>
@@ -147,7 +149,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <grid id="5b6c6" layout-manager="FlowLayout" hgap="5" vgap="-1" flow-align="0">
+                  <grid id="5b6c6" layout-manager="FlowLayout" hgap="2" vgap="-1" flow-align="0">
                     <constraints>
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -186,6 +188,7 @@
                       <component id="7b02d" class="javax.swing.JLabel" binding="dealerLabel02">
                         <constraints/>
                         <properties>
+                          <horizontalTextPosition value="2"/>
                           <text value=""/>
                           <verticalAlignment value="1"/>
                         </properties>
@@ -193,6 +196,7 @@
                       <component id="3ecc5" class="javax.swing.JLabel" binding="allInLabel02">
                         <constraints/>
                         <properties>
+                          <horizontalTextPosition value="2"/>
                           <text value=""/>
                           <verticalAlignment value="1"/>
                         </properties>
@@ -574,9 +578,9 @@
                       </component>
                     </children>
                   </grid>
-                  <grid id="40e2f" layout-manager="FlowLayout" hgap="5" vgap="-1" flow-align="0">
+                  <grid id="40e2f" layout-manager="FlowLayout" hgap="2" vgap="-1" flow-align="0">
                     <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <background color="-16031474"/>
@@ -676,9 +680,9 @@
                       </component>
                     </children>
                   </grid>
-                  <grid id="10538" layout-manager="FlowLayout" hgap="5" vgap="-1" flow-align="0">
+                  <grid id="10538" layout-manager="FlowLayout" hgap="2" vgap="-1" flow-align="0">
                     <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <background color="-16031474"/>

@@ -24,7 +24,6 @@ public class Client extends Thread {
     private PokerFrame pokerFrame;
     private GameState gameState;
     private Player user;
-    private Object lock = new Object();
 
 
     public Client() {
@@ -50,10 +49,15 @@ public class Client extends Thread {
         login();
         Terminal.print("Login successful");
         loginForm.setLoginMessage();
-        while (gameState == null) {
+        boolean foo = false;
+        while (gameState == null || !foo) {
             Terminal.print(String.valueOf(gameState));
             getGameState();
+            if (!(gameState.maxStake == 0)) {
+                foo = true;
+            }
         }
+        Terminal.print(String.valueOf(foo));
         Terminal.print(String.valueOf(gameState));
         loginForm.end();
         pokerFrame = new PokerFrame(user, gameState);
@@ -105,7 +109,7 @@ public class Client extends Thread {
 
     private synchronized void prepare() {
         Terminal.print("user: " + user);
-        Terminal.print("gameState: " + gameState.round +".Round, "+gameState.cardPhase+", dealer "+gameState.dealer.getUsername()+", maxstake "+gameState.maxStake+", mainpot "+getSumOfMainPot(gameState.mainPot));
+        Terminal.print("gameState: " + gameState.round + ".Round, " + gameState.cardPhase + ", dealer " + gameState.dealer.getUsername() + ", maxstake " + gameState.maxStake + ", mainpot " + getSumOfMainPot(gameState.mainPot));
         pokerFrame.setRoundLabel(gameState.round);
         pokerFrame.setPhaseLabel(String.valueOf(gameState.cardPhase));
         pokerFrame.setDealerOrAllInIcon(gameState.dealer, false);
@@ -122,7 +126,7 @@ public class Client extends Thread {
     }
 
     private int getSumOfMainPot(List<Integer> mainpot) {
-        Terminal.print("mainpot: "+ gameState.mainPot.toString());
+        Terminal.print("mainpot: " + gameState.mainPot.toString());
         int sumOfPot = 0;
         for (int i : mainpot) {
             sumOfPot += i;
