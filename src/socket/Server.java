@@ -123,13 +123,11 @@ public class Server implements Messenger {
 
     public void synchro(GameState gameState) {
         Terminal.print("Synchronize");
-        Terminal.print(clientDealers.toString());
-        Terminal.print(gameState.players.size()+gameState.players.toString());
+//        Terminal.print(clientDealers.toString());
+//        Terminal.print(gameState.players.size()+gameState.players.toString());
 
         for (ClientDealer clientDealer : clientDealers) {
-            Terminal.print("synchro: " + clientDealer.toString());
             clientDealer.sendGameState(gameState);
-            Terminal.print(gameState.toString());
         }
     }
 }

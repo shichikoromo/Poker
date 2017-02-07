@@ -119,36 +119,37 @@ public class Client extends Thread {
         for (Player player : gameState.players) {
             pokerFrame.setNameOrMoney(player, false, false);
             pokerFrame.setNameOrMoney(player, true, false);
-            pokerFrame.setHandcardsPic(player, player.getHandCards());
+            pokerFrame.setHandcardsPic(player);
         }
         pokerFrame.setPlayerVisiblity(user);
-
     }
 
     private int getSumOfMainPot(List<Integer> mainpot) {
-        Terminal.print("mainpot: " + gameState.mainPot.toString());
         int sumOfPot = 0;
         for (int i : mainpot) {
             sumOfPot += i;
         }
-        Terminal.print("SumOfPot: " + String.valueOf(sumOfPot));
         return sumOfPot;
     }
 
     private void betPhase() {
         Terminal.print("betPhase()");
-        getGameState();
         Terminal.print("gameState: " + gameState.toString());
         gameState.tryAction = -1;
+        pokerFrame.setCurrentPlayerLabel(gameState.currentPlayer);
+        Terminal.print("actionsuccessful: " + String.valueOf(gameState.currentPlayer.getActionSuccessful()));
         while (!gameState.currentPlayer.getActionSuccessful()) {
-            pokerFrame.setCurrentPlayerLabel(gameState.currentPlayer);
-            if (gameState.tryAction == 2) {
+            Terminal.print("tryAction: " + gameState.tryAction);
+            if (gameState.tryAction >= 0 && gameState.tryAction == 2) {
+                pokerFrame.setActionLabel(gameState.currentPlayer,gameState.tryAction);
                 Terminal.print("sendAction(bet)");
                 sendAction(true);
-            } else {
+            } else if (gameState.tryAction >= 0) {
+                pokerFrame.setActionLabel(gameState.currentPlayer,gameState.tryAction);
                 Terminal.print("sendAction()");
                 sendAction(false);
             }
+            pokerFrame.setAlert("");
         }
     }
 

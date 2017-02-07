@@ -32,7 +32,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <grid id="cf3b3" binding="playerPanel01" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="5">
+              <grid id="cf3b3" binding="playerPanel01" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="5">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="2" fill="1" indent="0" use-parent-layout="false"/>
@@ -44,7 +44,7 @@
                 <children>
                   <grid id="18031" layout-manager="FlowLayout" hgap="2" vgap="-1" flow-align="0">
                     <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <background color="-16031474"/>
@@ -104,7 +104,7 @@
                   </grid>
                   <grid id="9ce0b" layout-manager="FlowLayout" hgap="5" vgap="-1" flow-align="0">
                     <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <background color="-16031474"/>
@@ -126,20 +126,9 @@
                       </component>
                     </children>
                   </grid>
-                  <component id="2a148" class="javax.swing.JLabel" binding="winnerLabel01">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <foreground color="-15597746"/>
-                      <text value="   "/>
-                      <verticalAlignment value="3"/>
-                      <verticalTextPosition value="3"/>
-                    </properties>
-                  </component>
                 </children>
               </grid>
-              <grid id="db7b1" binding="playerPanel02" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="5">
+              <grid id="db7b1" binding="playerPanel02" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="5">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="2" fill="1" indent="0" use-parent-layout="false"/>
@@ -151,7 +140,7 @@
                 <children>
                   <grid id="5b6c6" layout-manager="FlowLayout" hgap="2" vgap="-1" flow-align="0">
                     <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <background color="-16031474"/>
@@ -213,20 +202,9 @@
                       </component>
                     </children>
                   </grid>
-                  <component id="ce4ff" class="javax.swing.JLabel" binding="winnerLabel02">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <foreground color="-15597746"/>
-                      <text value="     "/>
-                      <verticalAlignment value="3"/>
-                      <verticalTextPosition value="3"/>
-                    </properties>
-                  </component>
                   <grid id="6eb2e" layout-manager="FlowLayout" hgap="5" vgap="-1" flow-align="0">
                     <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <background color="-16031474"/>
@@ -494,9 +472,10 @@
                         <properties>
                           <background color="-16031474"/>
                           <editable value="true"/>
+                          <enabled value="false"/>
                           <foreground color="-1"/>
                           <horizontalAlignment value="0"/>
-                          <text value="                      "/>
+                          <text value=""/>
                         </properties>
                       </component>
                       <component id="77db0" class="javax.swing.JTextArea" binding="alert">
@@ -509,8 +488,8 @@
                           <background color="-16031474"/>
                           <editable value="false"/>
                           <enabled value="true"/>
-                          <font size="9"/>
-                          <foreground color="-4519126"/>
+                          <font size="11"/>
+                          <foreground color="-652494"/>
                           <text value=""/>
                           <toolTipText value="                               "/>
                         </properties>
@@ -534,7 +513,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <grid id="afe3e" binding="playerPanel04" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="5">
+              <grid id="afe3e" binding="playerPanel04" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="5">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
@@ -544,20 +523,9 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="4cf9" class="javax.swing.JLabel" binding="winnerLabel04">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <foreground color="-15597746"/>
-                      <text value="   "/>
-                      <verticalAlignment value="3"/>
-                      <verticalTextPosition value="3"/>
-                    </properties>
-                  </component>
                   <grid id="34c8f" layout-manager="FlowLayout" hgap="5" vgap="-1" flow-align="0">
                     <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <background color="-16031474"/>
@@ -580,7 +548,7 @@
                   </grid>
                   <grid id="40e2f" layout-manager="FlowLayout" hgap="2" vgap="-1" flow-align="0">
                     <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <background color="-16031474"/>
@@ -636,7 +604,7 @@
                   </grid>
                 </children>
               </grid>
-              <grid id="24544" binding="playerPanel03" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="5">
+              <grid id="24544" binding="playerPanel03" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="5">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
@@ -646,20 +614,9 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="a4146" class="javax.swing.JLabel" binding="winnerLabel03">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <foreground color="-15597746"/>
-                      <text value="    "/>
-                      <verticalAlignment value="3"/>
-                      <verticalTextPosition value="3"/>
-                    </properties>
-                  </component>
                   <grid id="7d1a5" layout-manager="FlowLayout" hgap="5" vgap="-1" flow-align="0">
                     <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <background color="-16031474"/>
@@ -682,7 +639,7 @@
                   </grid>
                   <grid id="10538" layout-manager="FlowLayout" hgap="2" vgap="-1" flow-align="0">
                     <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <background color="-16031474"/>

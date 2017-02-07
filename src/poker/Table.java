@@ -129,9 +129,11 @@ public class Table extends Thread {
 
         while (!checkIfPhaseEnds()) {
             gameState.isOptionInvalid = true;
+            gameState.currentPlayer.setActionSuccessful(false);
             int option = 0;
             if (gameState.currentPlayer.isAllIn()) {
                 gameState.currentPlayer = getNextPlayer(gameState.currentPlayer);
+                gameState.currentPlayer.setActionSuccessful(true);
                 option = 1;
             } else {
                 while (gameState.isOptionInvalid) {
@@ -139,6 +141,8 @@ public class Table extends Thread {
                         option = gameState.tryAction;
                     } else {
                         gameState.isOptionInvalid = false;
+                        gameState.currentPlayer.setActionSuccessful(false);
+
                     }
                 }
             }
@@ -295,9 +299,12 @@ public class Table extends Thread {
 
     private boolean betForCurrentPlayer(int stake) {
         boolean isBetSuccessful = true;
+        gameState.currentPlayer.setActionSuccessful(true);
+
         if (stake < gameState.maxStake) {
             // writeMessage("Your stake has to be at least " + gameState.maxStake);
             isBetSuccessful = false;
+            gameState.currentPlayer.setActionSuccessful(false);
         } else {
             try {
                 gameState.currentPlayer.bet(stake);
@@ -305,6 +312,8 @@ public class Table extends Thread {
             } catch (NotEnoughMoneyException e) {
                 //  writeMessage("You don't have enough money. ");
                 isBetSuccessful = false;
+                gameState.currentPlayer.setActionSuccessful(false);
+
             }
         }
         return isBetSuccessful;

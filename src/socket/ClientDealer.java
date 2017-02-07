@@ -260,7 +260,7 @@ public class ClientDealer extends Thread {
 
     public void sendGameState(GameState gameState) {
         //       this.message = gameState;
-        Terminal.print(String.valueOf("gameState: " + gameState));
+        Terminal.print("    gameState: " +String.valueOf(gameState));
         try {
             out.writeObject(gameState);
         } catch (IOException e) {

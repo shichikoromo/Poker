@@ -86,11 +86,17 @@ public class PokerFrame extends Thread {
     private Player player;
     private GameState gameState;
     private Table table;
+    private int tries = 0;
 
     private ImageIcon dealerIcon;
     private ImageIcon allInIcon;
 
     public int action;
+
+    //TODO SENTAKU HA ITIDO NOMI & ACTION MINA NI HYOUJI(CLIENT KARA?)
+    //TODO action okuru& table de shori
+    //TODO atarasshii jouhou wo okuru & hyouji
+    //TOFU gewinner finden & zeigen(new Frame?)
 
     public PokerFrame(Player player, GameState gameState) {
         this.player = player;
@@ -107,56 +113,34 @@ public class PokerFrame extends Thread {
         initListeners();
     }
 
-    private void initListeners() { //TODO SENTAKU HA ITIDO NOMI & ACTION MINA NI HYOUJI(CLIENT KARA?)
+    private void initListeners() {
+
         foldButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (player.getUsername().equals(gameState.currentPlayer.getUsername())) {
-                    gameState.tryAction = 0;
-                    for (Player pl : gameState.players) {
-                        setActionLabel(player, gameState.tryAction);
-                    }
-                }
+                setAction(0);
             }
         });
 
         callCheckButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (player.getUsername().equals(gameState.currentPlayer.getUsername())) {
-                    gameState.tryAction = 1;
-                    for (Player pl : gameState.players) {
-                        setActionLabel(player, gameState.tryAction);
-                    }
-                }
+                setAction(1);
             }
         });
 
         betRaiseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (player.getUsername().equals(gameState.currentPlayer.getUsername())) {
-                    gameState.tryAction = 2;
-                    for (Player pl : gameState.players) {
-                        setActionLabel(player, gameState.tryAction);
-                    }
-                    howMuchField.setText("  How much?  ");
-                    int i = 3;
-                    alert.setText("tries remain: " + i);
-                }
+                tries = 3;
+                setAction(2);
             }
         });
 
         allInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (player.getUsername().equals(gameState.currentPlayer.getUsername())) {
-                    gameState.tryAction = 3;
-                    setActionLabel(player, gameState.tryAction);
-                    setDealerOrAllInIcon(player, true);
-
-
-                }
+                setAction(3);
             }
         });
 
@@ -164,7 +148,7 @@ public class PokerFrame extends Thread {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                howMuchField.setText("");
+                howMuchField.isEditable();
             }
         });
 
@@ -174,7 +158,8 @@ public class PokerFrame extends Thread {
                 if (KeyEvent.VK_ENTER == e.getKeyCode()) {
                     int stake = Integer.getInteger(howMuchField.getText());
                     if (stake < 0 && stake > 3) {
-                        alert.setText("input invalid");
+                        tries -= 1;
+                        alert.setText("input invalid \n tries remain: "+tries);
                     } else {
                         gameState.tryStake = stake;
                     }
@@ -184,6 +169,19 @@ public class PokerFrame extends Thread {
         });
 
     }
+
+    private void setAction(int i) {
+        if (player.getUsername().equals(gameState.currentPlayer.getUsername())) {
+            gameState.tryAction = i;
+            if (i == 2) {
+                howMuchField.setText("  How much?  ");
+                alert.setText("tries remain: " + tries);
+            } else if (i == 3){
+                setDealerOrAllInIcon(player, true);
+            }
+        }
+    }
+
 
     public static void main(String[] args) {
         new PokerFrame(null, null).setVisible(true);
@@ -233,6 +231,11 @@ public class PokerFrame extends Thread {
 
         howMuchField.setText("                ");
     }
+
+    public void setAlert(String message){
+        alert.setText(message);
+    }
+
 
     public void setRoundLabel(int round) {
         String roundText = round + ". Round";
@@ -353,9 +356,7 @@ public class PokerFrame extends Thread {
         }
     }
 
-    public void setHandcardsPic(Player player, List<PokerCard> handcards) {
-        Terminal.print(handcards.toString());
-        ImageIcon nullIcon = getCardPic(null);
+    public void setHandcardsPic(Player player) {
         Terminal.print("handcards: " + player.getUsername() + player.getHandCards());
         ImageIcon icon01 = getCardPic(player.getHandCards().get(0));
         ImageIcon icon02 = getCardPic(player.getHandCards().get(1));
@@ -415,6 +416,14 @@ public class PokerFrame extends Thread {
         }
     }
 
+    public void flushActionLabel() {
+        actionLabel01.setText("");
+        actionLabel02.setText("");
+        actionLabel03.setText("");
+        actionLabel04.setText("");
+    }
+
+
     public String getAction(int action) {
         switch (action) {
             case 0:
@@ -437,7 +446,6 @@ public class PokerFrame extends Thread {
         Terminal.print("index: " + String.valueOf(index));
         switch (index) {
             case 0:
-                Terminal.print("case 0");
                 playerCards02_01.setIcon(nullIcon);
                 playerCards02_02.setIcon(nullIcon);
                 playerCards04_01.setIcon(nullIcon);
@@ -449,7 +457,6 @@ public class PokerFrame extends Thread {
                 moneyLabel04.setVisible(false);
                 break;
             case 1:
-                Terminal.print("case 1");
                 playerCards01_01.setIcon(nullIcon);
                 playerCards01_02.setIcon(nullIcon);
                 playerCards04_01.setIcon(nullIcon);
@@ -461,7 +468,6 @@ public class PokerFrame extends Thread {
                 moneyLabel04.setVisible(false);
                 break;
             case 2:
-                Terminal.print("case 2");
                 playerCards01_01.setIcon(nullIcon);
                 playerCards01_02.setIcon(nullIcon);
                 playerCards02_01.setIcon(nullIcon);
@@ -473,7 +479,6 @@ public class PokerFrame extends Thread {
                 moneyLabel04.setVisible(false);
                 break;
             case 3:
-                Terminal.print("case 3");
                 playerCards01_01.setIcon(nullIcon);
                 playerCards01_02.setIcon(nullIcon);
                 playerCards02_01.setIcon(nullIcon);
